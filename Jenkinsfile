@@ -9,19 +9,9 @@ pipeline {
                 // Clone the Git repository
                 git 'https://github.com/Prabhakanthgc1995/tomcat.git'
             }
-        }
-        
-        // Stage to install dependencies
-        stage('Install Dependencies') {
-            agent any  // This can also run on any node
-            steps {
-                script {
-                    // Ensure Ansible and Git are available on the agent
-                    sh 'ansible --version'
-                    sh 'git --version'
-                }
-            }
-        }
+        } 
+    }
+}
 
         // Stage to deploy to Tomcat using Ansible
         stage('Deploy to Tomcat') {
