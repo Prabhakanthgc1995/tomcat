@@ -1,0 +1,6 @@
+---
+- name: roles
+  hosts: all
+  become: yes
+  roles:
+    - prabhu
