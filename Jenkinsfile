@@ -4,10 +4,10 @@ pipeline {
     stages {
         // Stage to clone the repository
         stage('Clone Repository') {
-            agent any  // Use any available agent (including master or a node)
+            agent any  // Use any available agent
             steps {
-                // Clone the Git repository
-                git 'https://github.com/Prabhakanthgc1995/tomcat.git'
+                // Clone the Git repository and specify the branch
+                git branch: 'main', url: 'https://github.com/Prabhakanthgc1995/tomcat.git'
             }
         }
 
@@ -26,12 +26,12 @@ pipeline {
             }
         }
 
-        // Stage for post-deployment testing
-        stage('Post Deployment') {
+        // Post-deployment check (optional)
+        stage('Post Deployment Check') {
             agent { label 'production' }  // Run this on the node with label 'production'
             steps {
                 script {
-                    // Check if Tomcat is running after deployment (HTTP response validation)
+                    // Check if Tomcat is up and running by sending a simple HTTP request
                     def result = sh(script: 'curl -I http://your-tomcat-server:8080', returnStatus: true)
                     if (result != 0) {
                         error "Tomcat server is not reachable!"
