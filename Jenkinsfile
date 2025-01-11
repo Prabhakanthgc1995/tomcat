@@ -28,7 +28,7 @@ pipeline {
 
         // Post-deployment check (optional)
         stage('Post Deployment Check') {
-            agent { label 'production' }  // Run this on the node with label 'production'
+            agent { label 'dev' }  // Run this on the node with label 'production'
             steps {
                 script {
                     // Check if Tomcat is up and running by sending a simple HTTP request
