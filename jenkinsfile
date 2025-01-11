@@ -5,7 +5,7 @@ pipeline {
         stage('Clone Repository') {
             agent any
             steps {
-                git 'https://github.com/your-org/your-repository.git'
+                git clone 'https://github.com/Prabhakanthgc1995/tomcat.git'
             }
         }
         
