@@ -21,7 +21,7 @@ pipeline {
 
                     // Run the Ansible playbook to deploy to Tomcat
                     // Make sure deploy_tomcat.yml and inventory/hosts exist in the workspace
-                    sh 'ansible-playbook -i inventory/hosts deploy_tomcat.yml'
+                    sh 'ansible-playbook deploy_tomcat.yml'
                 }
             }
         }
