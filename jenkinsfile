@@ -1,0 +1,43 @@
+pipeline {
+    agent none
+    
+    stages {
+        stage('Clone Repository') {
+            agent any
+            steps {
+                git 'https://github.com/your-org/your-repository.git'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            agent any
+            steps {
+                script {
+                    // Make sure Ansible and Git are available
+                    sh 'ansible --version'
+                    sh 'git --version'
+                }
+            }
+        }
+        
+        stage('Deploy to Tomcat') {
+            agent { label 'dev' }  // Deploy to Node1
+            steps {
+                script {
+                    // Run the Ansible playbook to deploy to Tomcat
+                    sh 'ansible-playbook -i inventory/hosts deploy_tomcat.yml'
+                }
+            }
+        }
+
+        stage('Post Deployment') {
+            agent { label 'production' }  // Run tests or checks on Node2
+            steps {
+                script {
+                    // You can add post-deployment testing or validation steps here
+                    sh 'curl -I http://your-tomcat-server:8080'
+                }
+            }
+        }
+    }
+}
