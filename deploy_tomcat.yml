@@ -3,7 +3,4 @@
   hosts: all
   become: yes
   roles:
-    - prabhu  # Ensure this role is in the correct path
-
-  # Optionally, specify role path
-  roles_path: /home/ubuntu/workspace/tomcat1/roles
+    - prabhu
