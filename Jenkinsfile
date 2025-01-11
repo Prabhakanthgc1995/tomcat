@@ -6,8 +6,8 @@ pipeline {
         stage('Clone Repository') {
             agent any  // Use any available agent
             steps {
-                // Clone the Git repository
-                git 'https://github.com/Prabhakanthgc1995/tomcat.git'
+                // Clone the Git repository and specify the branch
+                git branch: 'main', url: 'https://github.com/Prabhakanthgc1995/tomcat.git'
             }
         }
 
@@ -16,22 +16,19 @@ pipeline {
             agent { label 'dev' }  // Run this on the node with label 'dev'
             steps {
                 script {
-                    // Print the current working directory
-                    sh 'pwd'  // This will help confirm the location of the files
-
-                    // Ensure Ansible is installed on the node
+                    // Ensure Ansible is installed on the node (optional, but good practice)
                     sh 'ansible --version'
 
                     // Run the Ansible playbook to deploy to Tomcat
-                    // Make sure the correct path to the playbook is provided
-                    sh 'ansible-playbook -i inventory/hosts deploy_tomcat.yml'
+                    // Make sure deploy_tomcat.yml and inventory/hosts exist in the workspace
+                    sh 'ansible-playbook deploy_tomcat.yml'
                 }
             }
         }
 
-        // Post-deployment check
+        // Post-deployment check (optional)
         stage('Post Deployment Check') {
-            agent { label 'production' }
+            agent { label 'dev' }  // Run this on the node with label 'production'
             steps {
                 script {
                     // Check if Tomcat is up and running by sending a simple HTTP request
