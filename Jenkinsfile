@@ -4,10 +4,9 @@ pipeline {
     stages {
         // Stage to clone the repository
         stage('Clone Repository') {
-            agent any  // Use any available agent
+            agent any
             steps {
-                // Clone the Git repository and specify the branch
-                git branch: 'main', url: 'https://github.com/Prabhakanthgc1995/tomcat.git'
+                git 'https://github.com/Prabhakanthgc1995/tomcat.git'
             }
         }
 
@@ -16,22 +15,23 @@ pipeline {
             agent { label 'dev' }  // Run this on the node with label 'dev'
             steps {
                 script {
-                    // Ensure Ansible is installed on the node (optional, but good practice)
+                    // Export the ANSIBLE_ROLES_PATH environment variable
+                    env.ANSIBLE_ROLES_PATH = '/home/ubuntu/workspace/tomcat1/'
+
+                    // Ensure Ansible is installed on the node
                     sh 'ansible --version'
 
                     // Run the Ansible playbook to deploy to Tomcat
-                    // Make sure deploy_tomcat.yml and inventory/hosts exist in the workspace
-                    sh 'ansible-playbook deploy_tomcat.yml'
+                    sh 'ansible-playbook -i inventory/hosts deploy_tomcat.yml'
                 }
             }
         }
 
-        // Post-deployment check (optional)
+        // Post-deployment check
         stage('Post Deployment Check') {
-            agent { label 'dev' }  // Run this on the node with label 'production'
+            agent { label 'production' }
             steps {
                 script {
-                    // Check if Tomcat is up and running by sending a simple HTTP request
                     def result = sh(script: 'curl -I http://your-tomcat-server:8080', returnStatus: true)
                     if (result != 0) {
                         error "Tomcat server is not reachable!"
